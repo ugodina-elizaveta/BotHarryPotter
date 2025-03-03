@@ -54,16 +54,16 @@ McGonagall;Are the rumors true, Albus?
 
 ![alt text](images/bleu_scores.png)
 
-Средний BLEU Score: 0.0468
+Средний BLEU Score: 0.0468  
 Низкий BLEU Score может быть связан с тем, что модель возвращает точные реплики из датасета, которые не всегда совпадают с ожидаемыми ответами.
 
 ### ROUGE Scores
 
 ![alt text](images/rouge_scores.png)
-Recall: 0.3419
-Precision: 0.5010
-F1: 0.3472
-Комментарий: ROUGE-1 показывает, что модель находит частичные совпадения между предсказанными и эталонными ответами.
+Recall: 0.3419  
+Precision: 0.5010  
+F1: 0.3472  
+ROUGE-1 показывает, что модель находит частичные совпадения между предсказанными и эталонными ответами.
 
 ## Итеративный процесс улучшения
 1. Baseline:
@@ -94,7 +94,7 @@ F1: 0.3472
 2. Запустите сервер: `uvicorn main:app --reload`. Сервер будет доступен по адресу: http://127.0.0.1:5000.
 3. Отправьте POST-запрос по адресу `/chat` с входными данными в формате JSON.
 
-Пример запроса: `curl -X POST "http://127.0.0.1:5000/chat" -H "Content-Type: application/json" -d '{"text": "Are you Harry?", "character": "Harry"}'`
+Пример запроса: `curl -X POST "http://127.0.0.1:5000/chat" -H "Content-Type: application/json" -d '{"text": "Are you Harry?", "character": "Harry"}'`  
 Также пример запроса лежит в файле test.ipynb
 
 ## Заключение
