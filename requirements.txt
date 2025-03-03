@@ -1,3 +1,7 @@
 pandas
-fastapi
 scikit-learn
+joblib
+fastapi
+uvicorn
+matplotlib
+seaborn

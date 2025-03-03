@@ -1,10 +1,14 @@
-cache = {}
+from functools import lru_cache
 
-def get_response(model, input_text, train_df):
-    if input_text in cache:
-        return cache[input_text]
+
+@lru_cache(maxsize=1000)
+def get_response(model, input_text, sentences):
+    """
+    Получает ответ от модели на основе входного текста.
+    :param model: Обученная модель RetrievalModel.
+    :param input_text: Входной текст (строка).
+    :param sentences: Список предложений (list или tuple).
+    :return: Ответ (строка).
+    """
     index = model.predict([input_text])[0]
-    response = train_df.iloc[index]['Text']
-    cache[input_text] = response
-
-    return response
+    return sentences[index]

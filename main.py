@@ -1,35 +1,46 @@
 from fastapi import FastAPI
-from src.model import RetrievalModel
-from src.inference import get_response
-from src.preprocessing import preprocess_data, load_data
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 import uvicorn
+from src.model import RetrievalModel
+import logging
+from src.inference import get_response
+from src.preprocessing import preprocess_data, load_data
 
 app = FastAPI()
 
-class UserInput(BaseModel):
-    user_input: str
+# Загрузка и предобработка данных
+df = preprocess_data(load_data('data/Harry_Potter_1.csv'))
 
-# Подготавливаем данные для обучения модели
+# Обучение модели
 model = RetrievalModel()
-train_df = preprocess_data(load_data('data/Friends.csv'))
-model.fit(train_df['Text'])
+model.fit(df['Sentence'])
 
-@app.get("/")
-def read_root():
-    return {"message": "Welcome to the Joey Bot API! Send a POST request to '/chat' with user_input JSON field for a response."}
+
+class ChatRequest(BaseModel):
+    text: str
+    character: str = "Harry"  # По умолчанию выбран Harry
+
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 @app.post("/chat")
-def chat(user_input: UserInput):
+async def chat(request: ChatRequest):
     try:
-        response = get_response(model, user_input.user_input, train_df)
-        return JSONResponse(content=response, status_code=200)
+        logger.info(f"Received request: {request}")
+        # Предобработка данных для выбранного персонажа
+        df_filtered = preprocess_data(load_data('data/Harry_Potter_1.csv'), speaker=request.character)
+        # Преобразуем столбец 'Sentence' в список
+        sentences = df_filtered['Sentence'].tolist()
+        # Получаем ответ
+        response = get_response(model, request.text, tuple(sentences))  # Используем tuple для хэширования
+        logger.info(f"Response: {response}")
+        return {"response": response}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(f"Error: {e}")
+        return {"error": str(e)}
+
 
 # Запуск приложения
-# Используйте следующую команду для запуска сервиса:
-# uvicorn main:app --reload
-uvicorn.run(app, host="0.0.0.0", port=5000)
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=5000)

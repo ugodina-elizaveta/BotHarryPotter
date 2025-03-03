@@ -1,11 +1,16 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split
+import re
+from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 
-def load_data(file_path):
-    return pd.read_csv(file_path)
+def load_data(file_path, sep=';'):
+    return pd.read_csv(file_path, sep=sep)
 
-def preprocess_data(df, speaker='JOEY'):
-    # Оставляем только реплики нужного персонажа
-    df = df[df['Speaker'] == speaker]
-    df['Text'] = df['Text'].str.lower().str.strip()
-    return df
+def preprocess_data(df, speaker='Harry'):
+    df = df[df['Character'] == speaker]
+    df['Sentence'] = df['Sentence'].str.lower().str.strip()
+    df['Sentence'] = df['Sentence'].apply(lambda x: re.sub(r'[^a-zA-Z\s]', '', x))
+    # custom_stop_words = ENGLISH_STOP_WORDS - {'harry', 'potter'}
+    # df['Sentence'] = df['Sentence'].apply(
+    #     lambda x: ' '.join([word for word in x.split() if word not in custom_stop_words])
+    # )
+    return df.dropna().drop_duplicates()
