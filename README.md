@@ -1,4 +1,4 @@
-# BotHarryPotter
+# BotHarryPotter retrieval-based
 
 # Отчёт о выполнении задания
 
