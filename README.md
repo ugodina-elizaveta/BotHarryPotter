@@ -8,11 +8,11 @@
 
 Данные для обучения модели были собраны из открытого источника Kaggle. Датасет содержит реплики персонажей из фильма "Гарри Поттер и философский камень". Каждая строка содержит имя персонажа и его реплику.
 
-Пример данных:
-Character;Sentence
-Dumbledore;I should've known that you would be here, Professor McGonagall.
-McGonagall;Good evening, Professor Dumbledore.
-McGonagall;Are the rumors true, Albus?
+Пример данных:  
+Character;Sentence  
+Dumbledore;I should've known that you would be here, Professor McGonagall.  
+McGonagall;Good evening, Professor Dumbledore.  
+McGonagall;Are the rumors true, Albus?  
 
 ## Архитектура модели
 Модель использует подход retrieval-based, который заключается в поиске наиболее подходящего ответа из заранее подготовленного набора реплик. Основные компоненты модели:
